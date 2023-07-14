@@ -7,14 +7,6 @@ uint32_t W[68];
 uint32_t W_[64];
 uint32_t IV[] = { 0x7380166f ,0x4914b2b9 ,0x172442d7 ,0xda8a0600 ,0xa96f30bc, 0x163138aa, 0xe38dee4d, 0xb0fb0e4e };
 uint32_t result[8];
-char fake_input[100];
-uint32_t temp[8];
-uint32_t paddedResult[] = {
-		0x00000000, 0x00000000, 0x00000000, 0x00000000,
-		0x00000000, 0x00000000, 0x00000000, 0x00000000,
-		0x00000000, 0x00000000, 0x00000000, 0x00000000,
-		0x00000000, 0x00000000,0x00000000, 0x00000000 };
-uint32_t IV1[] = { 0x6c781f1a,0x541010aa,0xa20d9999,0xb963be0a,0xd34bcbdc,0xafa43bc0,0x9ec49c19,0x9f0e45e7 };
 uint32_t T[64] = { 0x79cc4519,0x79cc4519,0x79cc4519,0x79cc4519,0x79cc4519,0x79cc4519,0x79cc4519,0x79cc4519,
 0x79cc4519, 0x79cc4519, 0x79cc4519, 0x79cc4519,0x79cc4519, 0x79cc4519, 0x79cc4519 ,0x79cc4519,
 0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a,0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a,
@@ -23,6 +15,14 @@ uint32_t T[64] = { 0x79cc4519,0x79cc4519,0x79cc4519,0x79cc4519,0x79cc4519,0x79cc
 0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a,0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,
 0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a,0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,
 0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a,0x7a879d8a ,0x7a879d8a ,0x7a879d8a ,0x7a879d8a };
+char fake_input[100];
+uint32_t temp[8];
+uint32_t paddedResult[] = {
+		0x00000000, 0x00000000, 0x00000000, 0x00000000,
+		0x00000000, 0x00000000, 0x00000000, 0x00000000,
+		0x00000000, 0x00000000, 0x00000000, 0x00000000,
+		0x00000000, 0x00000000,0x00000000, 0x00000000 };
+uint32_t IV1[] = { 0x6c781f1a,0x541010aa,0xa20d9999,0xb963be0a,0xd34bcbdc,0xafa43bc0,0x9ec49c19,0x9f0e45e7 };
 void Log(uint32_t* ts, int num)
 {
 	for (int i = 0;i < num;i++)
@@ -45,7 +45,6 @@ void ExpandMessage(uint32_t* paddedResult, uint32_t* W, uint32_t* W_)
 {
 	__m512i a = _mm512_load_epi32(paddedResult);
 	_mm512_store_epi32(W, a);
-
 	for (int i = 16;i < 68;i += 2)
 	{
 		uint32_t temp1 = W[i - 16] ^ W[i - 9] ^ (Rotate_left(W[i - 3], 15));
@@ -63,6 +62,7 @@ void ExpandMessage(uint32_t* paddedResult, uint32_t* W, uint32_t* W_)
 		W_[i + 3] = (W[i + 3] ^ W[i + 7]);
 	}
 }
+
 uint32_t P0(uint32_t X)
 {
 	return X ^ Rotate_left(X, 9) ^ Rotate_left(X, 17);
@@ -199,12 +199,22 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 		}
 	}
 	cout << "填充后的消息：" << endl;
+
 	for (int i = 0;i < block_size;i++)
 	{
 		Log(paddedResult[i], 16);
 		cout << endl;
 	}
 
+	//uint32_t* temp = IV;
+	//uint32_t temp[8]{ 0 };//ERROR
+	/*
+	for (int i = 0;i < 8;i++)
+	{
+		temp[i] = IV[i];
+	}*/
+	//uint32_t temp[] = { 0x7380166f ,0x4914b2b9 ,0x172442d7 ,0xda8a0600 ,0xa96f30bc, 0x163138aa, 0xe38dee4d, 0xb0fb0e4e };
+	//uint32_t temp[8];
 	for (int i = 0;i < 8;i++)
 	{
 		temp[i] = IV[i];
@@ -213,7 +223,7 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 
 	for (int i = 0;i < block_size;i++)
 	{
-		//ExpandMessage(paddedResult[i], W, W_);
+		ExpandMessage(paddedResult[i], W, W_);
 		//cout << "扩展后的消息：" << endl;
 		//Log(W, 68);
 		//Log(W_, 64);
@@ -221,12 +231,9 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 	}
 	Log(result, 8);
 	uint32_t* fake_result = new uint32_t[8];
-	for (int i = 0;i < 8;i += 4)
+	for (int i = 0;i < 8;i++)
 	{
-		temp[i] = IV[i];
-		temp[i + 1] = IV[i + 1];
-		temp[i + 2] = IV[i + 2];
-		temp[i + 3] = IV[i + 3];
+		fake_result[i] = result[i];
 	}
 	delete[] padding;
 	for (int i = 0; i < block_size; ++i) {
@@ -235,16 +242,69 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 	delete[]paddedResult;
 	return make_pair(length, fake_result);
 }
+/*
+void length_expand_attack()
+{
+	ExpandT(T);
+	uint32_t paddxing[2][8] = { { 0x32303231,0x30303436,0x30313230,0x80000000,0x00000000,0x00000000,0x00000000,0x00000060 },
+		{0x61626380,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000218} };
+	for (int i = 0;i < 8;i++)
+	{
+		temp[i] = IV[i];
+	}
+	uint32_t* temp_ = temp;
 
+	for (int i = 0;i < 2;i++)
+	{
+		ExpandMessage(paddxing[i], W, W_);
+		//cout << "扩展后的消息：" << endl;
+		//Log(W, 68);
+		//Log(W_, 64);
+		temp_ = Compress(temp_, W, W_, result);//可修改的左值
+	}
+	Log(result, 8);
+}*/
+/*
+int main()
+{
+
+	//length_expand_attack();
+	char s3[100] = "202100460120";
+	uint32_t *jkl=SM3(s3, IV,result).second;//再执行一次SM3，jkl会变的
+	char s4[100] = "abc";
+	SM3(s4, IV,result);
+	SM3(s4, jkl,result);
+	ExpandT(T);
+	uint32_t paddxing[2][16] = { { 0x32303231,0x30303436,0x30313230,0x80000000,0x00000000,0x00000000,
+		0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000060 },
+		{0x61626380,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
+		0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000018} };
+	uint32_t temp1[8];
+	for (int i = 0;i < 8;i++)
+	{
+		temp1[i] = IV[i];
+	}
+	uint32_t* temp_ = temp1;
+
+	for (int i = 0;i < 2;i++)
+	{
+		ExpandMessage(paddxing[i], W, W_);
+		temp_ = Compress(temp_, W, W_, result);//可修改的左值
+
+	}
+	cout << "构造的信息对应的哈希值是：";
+	Log(result, 8);
+	cin.get();
+
+
+}*/
 
 int main()
 {
 	cout << "这是快速SM3的代码实现。" << endl;
 	char input[] = "abc";
 	auto start = std::chrono::high_resolution_clock::now();
-
 	SM3(input, IV, result);
-
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = end - start;
 	std::cout << "耗时: " << duration.count() << " 秒" << std::endl;
