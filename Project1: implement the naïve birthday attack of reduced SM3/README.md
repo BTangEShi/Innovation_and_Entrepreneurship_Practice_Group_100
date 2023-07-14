@@ -49,23 +49,58 @@
 
 >## 结果展示
 >8bits
+>
+>
 >![8bits](8bits.png)
 >
+>
 >16bits
+>
+>
 >![16bits](16bits.png)
 >
+>
 >24bits
+>
+>
 >![24bits](24bits.png)
 >
+>
 >32bits
+>
+>
 >![32bits](32bits.png)
 >
+>
 >40bits
+>
+>
 >![40bits](40bits.png)
+>![40bits](40bit.png)
+>
+>
+>44bits
+>![44bits](44bits.png)
+>![44bits](44bit.png)
+>
+>
+>48bits
+>
+>
+>![48bits](48bits.png)
+>
+>
+>52bits
+>
+>
+>![52bits](52bits.png)
+>
+>
 
 
->|        | 8bits  | 16bits | 24bits | 32bits | 40bits |
->|--------|--------|--------|--------|--------|--------|
+
+>|        | 8bits  | 16bits | 24bits | 32bits | 40bits |44bits |48bits |52bits |
+>|--------|--------|--------|--------|--------|--------|-------|-------|-------|
 >| SM3    | 0.036s | 0.154s | 1.307s | 11.736s|        |
 >| SHA256 | 0.026s | 0.024s | 0.026s | 0.127s | 3.806s |
 >
