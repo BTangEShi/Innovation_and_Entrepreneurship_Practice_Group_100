@@ -45,8 +45,8 @@ void ExpandMessage(uint32_t* paddedResult, uint32_t* W, uint32_t* W_)
 {
 	__m512i a = _mm512_load_epi32(paddedResult);
 	_mm512_store_epi32(W, a);
-	
-	for (int i = 16;i < 68;i+=2)
+
+	for (int i = 16;i < 68;i += 2)
 	{
 		uint32_t temp1 = W[i - 16] ^ W[i - 9] ^ (Rotate_left(W[i - 3], 15));
 		uint32_t temp2 = W[i - 15] ^ W[i - 8] ^ (Rotate_left(W[i - 2], 15));
@@ -55,7 +55,7 @@ void ExpandMessage(uint32_t* paddedResult, uint32_t* W, uint32_t* W_)
 		W[i] = P1(temp1) ^ (fake1) ^ W[i - 6];
 		W[i + 1] = P1(temp2) ^ (fake2) ^ W[i - 5];
 	}
-	for (int i = 0;i < 64;i+=4)
+	for (int i = 0;i < 64;i += 4)
 	{
 		W_[i] = (W[i] ^ W[i + 4]);
 		W_[i + 1] = (W[i + 1] ^ W[i + 5]);
@@ -167,9 +167,9 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 		block_size = (length + 5) / 64 + 1;
 		padding_size = 64 - (length + 5) % 64;
 	}
-	//cout << "输入长度是：" << length << "字节。" << endl;
-	//cout << "块数目为：" << block_size << endl;
-	//cout << "填充0x00数目为：" << padding_size << endl;
+	cout << "输入长度是：" << length << "字节。" << endl;
+	cout << "块数目为：" << block_size << endl;
+	cout << "填充0x00数目为：" << padding_size << endl;
 	char* padding = new char[block_size * 64 + 1];//天才般的想法！！！
 	for (int i = 0;i < length;i++)
 	{
@@ -198,11 +198,11 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 			paddedResult[i][j] = (((uint8_t)padding[64 * i + 4 * j]) << 24) | (((uint8_t)padding[64 * i + 4 * j + 1]) << 16) | (((uint8_t)padding[64 * i + 4 * j + 2]) << 8) | (((uint8_t)padding[64 * i + 4 * j + 3]));
 		}
 	}
-	//cout << "填充后的消息：" << endl;
+	cout << "填充后的消息：" << endl;
 	for (int i = 0;i < block_size;i++)
 	{
-		//Log(paddedResult[i], 16);
-		//cout << endl;
+		Log(paddedResult[i], 16);
+		cout << endl;
 	}
 
 	for (int i = 0;i < 8;i++)
@@ -221,7 +221,7 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 	}
 	Log(result, 8);
 	uint32_t* fake_result = new uint32_t[8];
-	for (int i = 0;i < 8;i+=4)
+	for (int i = 0;i < 8;i += 4)
 	{
 		temp[i] = IV[i];
 		temp[i + 1] = IV[i + 1];
@@ -239,9 +239,10 @@ std::pair<int, uint32_t*> SM3(char* input, uint32_t* IV, uint32_t* result)
 
 int main()
 {
+	cout << "这是快速SM3的代码实现。" << endl;
 	char input[] = "abc";
 	auto start = std::chrono::high_resolution_clock::now();
-	
+
 	SM3(input, IV, result);
 
 	auto end = std::chrono::high_resolution_clock::now();
