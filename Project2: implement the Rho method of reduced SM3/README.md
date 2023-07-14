@@ -46,10 +46,15 @@
 
 
 >## 结果展示
->8bits
->![8bits](8bits.png)
+>SHA256
 >
->16bits
+>
+>![](11.png)
+>
+>
+>SM3
+>
+>
 >![16bits](16bits.png)
 >
 >24bits
