@@ -129,16 +129,16 @@
 
 >## 结果展示
 >### 结果的正确性
->![8bits](8bits.png)
+>![](SM3_China.png)
 >
->16bits
->![16bits](16bits.png)
 >
->24bits
->![24bits](24bits.png)
+>![](SM3.png)
 >
->32bits
->![32bits](32bits.png)
+>
+>![](SM3s.png)
+>
+>
+>### 速度展示
 >
 >40bits
 >![40bits](40bits.png)
