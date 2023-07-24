@@ -1,47 +1,14 @@
 > ## 原理阐释
 > 高级加密标准（英语：Advanced Encryption Standard，缩写：AES），在密码学中又称 Rijndael 加密法，是美国联邦政府采用的一种区块加密标准。这个标准用来替代原先的 DES，已经被多方分析且广为全世界所使用。经过五年的甄选流程，高级加密标准由美国国家标准与技术研究院（NIST）于 2001 年 11 月 26 日发布于 FIPS PUB 197，并在 2002 年 5 月 26 日成为有效的标准。2006 年，高级加密标准已然成为对称密钥加密中最流行的算法之一 AES 具有 128 比特的分组长度，三种可选的密钥长，即 128 比特、192 比特和 256 比特。AES 是一个迭代型密码；轮数 Nr 依赖于密钥长度。如果密钥长度为 128 比特，则 Nr =10；如果密钥长度为 192比特，则 Nr =12；如果密钥长度为 256 比特，则 Nr =14。AES 加密过程是在一个 4×4 的字节矩阵上运作，这个矩阵又称为“状态（state）”，其初值就是一个明文区块（矩阵中一个元素大小就是明文区块中的一个 Byte）。加密时，各轮 AES 加密循环（除最后一轮外）均包含 4 个步骤。
->##
-> ## 代码说明
-> 我们已经使用c++代码完成了SM3的实现。但是，考虑到攻击的方便性，我们本次实验使用python的gmssl库完成SM3的生日碰撞攻击的实现。并且，通过引入python的hashlib库完成sha256的生日碰撞攻击地实现来进行相应的对照。具体代码细节实现如下：
-> 
->    ```python
->     def collision_SHA256(num):
-        for item in permutations(ts,5):
-            item=''.join(item)
-            item=item.encode()
-            hash_object = hashlib.sha256(item)
-            hex_digest = hash_object.hexdigest()
-            value=hex_digest[0:num]
-            if(value not in st):
-                st[value]=(item,1)
-            else:
-                print(st[value][0])
-                print(item)
-                print(SHA256(st[value][0].decode()))
-                print(SHA256(item.decode()))
-                break
-> 
->```python
->    def collision_SHA256(num):
-        for item in permutations(ts,5):
-            item=''.join(item)
-            item=item.encode()
-            hash_object = hashlib.sha256(item)
-            hex_digest = hash_object.hexdigest()
-            value=hex_digest[0:num]
-            if(value not in st):
-                st[value]=(item,1)
-            else:
-                print(st[value][0])
-                print(item)
-                print(value)
-                break
-
->
->
->观察上述代码可知，我们构造了一个由数字和字符组成的字符串，然后通过该字符串生成固定长度为5的字符串。通过遍历固定长度为5的字符串，一定程度上简化了程序的复杂性，而不丧失其正确性。我们通过建立哈希表来存储已经进行计算过的字符串，并通过not in 来检查是否发生了reduced 哈希碰撞。这样虽然使得时间复杂度由pow(2,n)降至pow(2,n/2),但是也将空间复杂度由常数变成了pow(2,n).由此来看，生日攻击属于一种空间换取时间的算法。
-
-
+>### s盒
+> 通过非线性的替换函数，用查找表的方式把每个字节替换成对应的字节。状态矩阵中的元素按照下面的方式映射为一个新的字节：把该字节的高 4 位作为行值，低 4 位作为列值，取出 S 盒中对应的行的元素作为输出。例如，加密时，输出的字节 S1 为 0x12,则查 S 盒的第0x01 行和0x02 列，得到值0xc9,然后替换S1原有的0x12为0xc9。
+> ### 行移位
+> 行移位是一个简单的左循环移位操作。当密钥长度为 128 比特时，状态矩阵的第 0 行左移 0 字节，第 1 行左移 1 字节，第 2 行左移 2 字节，第 3 行左移 3 字节。
+> ### 列混淆
+> 为了充分混合矩阵中各个直行的操作。这个步骤使用线性转换来混合每列的四个字节。列混合变换是通过矩阵相乘来实现的，经行移位后的状态矩阵与固定的矩阵相乘，得到混淆后的状态矩阵。
+> ### 密钥异或
+> 矩阵中的每一个字节都与该次轮秘钥（round key）做 XOR 运算；每个子密钥由密钥生成方案产生。 其中，密钥 Ki 中每个字W[4i],W[4i+1],W[4i+2],W[4i+3]为 32 位比特字，包含 4 个字节。轮密钥加过程可以看成是字逐位异或的结果，也可以看成字节级别或者位级别的操作。也就是说，可以看成 S0 S1 S2 S3 组成的 32 位字与
+W[4i]的异或运算。
 >## 结果展示
 >8bits
 >
