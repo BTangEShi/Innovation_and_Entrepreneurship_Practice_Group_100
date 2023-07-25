@@ -2,60 +2,217 @@
 
 
 > ## 原理阐释
-> 本次实验是针对SM2签名的弱点进行代码实例化攻击。具体有以下四个方面：
+> 本次实验是针对SM2签名的弱点进行代码实例化攻击。具体有以下四个方面：  
 > leaking K
 >
 > 
+> ![enter image description here](1.png)
+>
+> 
 > reusing K
+>
+> 
+> ![enter image description here](2.png)
+>
+> 
 > reusing k by different users
+>
+> 
+> ![enter image description here](3.png)
+>
+> 
 > same d and k with ECDSA
 >
->
->![enter image description here](1.webp.jpg)
->![enter image description here](2.webp.jpg)
+> 
+> ![enter image description here](4.png)
 >
 > 
-> 而在密码学中，我们可以利用生日悖论，构造哈希碰撞。使得哈希碰撞的复杂度由pow(2,n)变成pow（2，n/2），这使得寻找哈希碰撞成为可能。
+
 > ## 代码说明
-> 我们已经使用c++代码完成了SM3的实现。但是，考虑到攻击的方便性，我们本次实验使用python的gmssl库完成SM3的生日碰撞攻击的实现。并且，通过引入python的hashlib库完成sha256的生日碰撞攻击地实现来进行相应的对照。具体代码细节实现如下：
+> 前面的实验，我们已经实现了SM2的签名算法。依照我们写好的程序，对一些弱点进行实例化攻击。  
+> 
+> leaking K
 > 
 >    ```python
->     def collision_SHA256(num):
-        for item in permutations(ts,5):
-            item=''.join(item)
-            item=item.encode()
-            hash_object = hashlib.sha256(item)
-            hex_digest = hash_object.hexdigest()
-            value=hex_digest[0:num]
-            if(value not in st):
-                st[value]=(item,1)
-            else:
-                print(st[value][0])
-                print(item)
-                print(SHA256(st[value][0].decode()))
-                print(SHA256(item.decode()))
-                break
+>     if __name__ == "__main__":
+    try:
+        ### SM2
+        cv     = Curve.get_curve('secp256k1')
+        pu_key = ECPublicKey(Point(0x65d5b8bf9ab1801c9f168d4815994ad35f1dcb6ae6c7a1a303966b677b813b00,
+                                   
+                                   0xe6b865e529b8ecbf71cf966e900477d49ced5846d7662dd2dd11ccd55c0aff7f,
+                                   cv))
+        pv_key = ECPrivateKey(0xfb26a4e75eec75544c0f44e937dcf5ee6355c7176600b9688c667e5c283b43c5,
+                              cv)
+        print("椭圆曲线是：",cv)
+        ID = b"TangShi"
+        entlen = len(ID) * 8
+        ENTL = entlen.to_bytes(2, 'big')
+        Z = hashlib.sha256(ENTL + ID + bin(cv.a)[2:].encode() + bin(cv.b)[2:].encode()
+        + bin(cv.generator.x)[2:].encode()+ bin(cv.generator.y)[2:].encode() +
+        bin((pv_key.d * cv.generator).x)[2:].encode() + bin((pv_key.d * cv.generator).y)[2:].encode()).digest()
+        signer=SM2()
+        sig=signer.sign(b"Hello",Z,pv_key)
+        r,s = decode_sig(sig[0],"BTUPLE")
+        MY_d=(pow((r+s),-1,cv.order)*(sig[1]-s))%cv.order
+        print("d是： ",pv_key.d)
+        print("破解的d是： ",MY_d)
+        if(pv_key.d==MY_d):
+            print("破解成功！! !")
+        else:
+            print("破解失败。。。")
+    finally:
+        pass
+> reusing K
 > 
 >```python
->    def collision_SHA256(num):
-        for item in permutations(ts,5):
-            item=''.join(item)
-            item=item.encode()
-            hash_object = hashlib.sha256(item)
-            hex_digest = hash_object.hexdigest()
-            value=hex_digest[0:num]
-            if(value not in st):
-                st[value]=(item,1)
-            else:
-                print(st[value][0])
-                print(item)
-                print(value)
-                break
+>    if __name__ == "__main__":
+    try:
+        ### SM2
+        cv     = Curve.get_curve('secp256k1')
+        pu_key = ECPublicKey(Point(0x65d5b8bf9ab1801c9f168d4815994ad35f1dcb6ae6c7a1a303966b677b813b00,
+                                   
+                                   0xe6b865e529b8ecbf71cf966e900477d49ced5846d7662dd2dd11ccd55c0aff7f,
+                                   cv))
+        pv_key = ECPrivateKey(0xfb26a4e75eec75544c0f44e937dcf5ee6355c7176600b9688c667e5c283b43c5,
+                              cv)
+        print("椭圆曲线是：",cv)
+        ID = b"TangShi"
+        entlen = len(ID) * 8
+        ENTL = entlen.to_bytes(2, 'big')
+        Z = hashlib.sha256(ENTL + ID + bin(cv.a)[2:].encode() + bin(cv.b)[2:].encode()
+        + bin(cv.generator.x)[2:].encode()+ bin(cv.generator.y)[2:].encode() +
+        bin((pv_key.d * cv.generator).x)[2:].encode() + bin((pv_key.d * cv.generator).y)[2:].encode()).digest()
+        
+        signer=SM2()
+        ID = b"TangShi"
+        entlen = len(ID) * 8
+        ENTL = entlen.to_bytes(2, 'big')
+        Z = hashlib.sha256(ENTL + ID + bin(cv.a)[2:].encode() + bin(cv.b)[2:].encode() + bin(cv.generator.x)[2:].encode() + bin(cv.generator.y)[2:].encode() + bin((pv_key.d * cv.generator).x)[2:].encode() + bin((pv_key.d * cv.generator).y)[2:].encode()).digest()
+        message1=b"Hello ts"
+        print("消息是：",message1)
+        sig1=signer.sign(message1,Z,pv_key)
+        r1,s1 = decode_sig(sig1, "BTUPLE")
+        print("签名是： ",sig1)
+        message2=b"Hello world"
+        print("消息是：",message2)
+        sig2=signer.sign(message2,Z,pv_key)
+        r2,s2 = decode_sig(sig2, "BTUPLE")
+        print("签名是： ",sig2)
+        MY_d=((s2-s1)*pow((s1-s2+r1-r2),-1,cv.order))%cv.order
+        print("d是： ",pv_key.d)
+        print("破解的d是： ",MY_d)
+        if(pv_key.d==MY_d):
+            print("破解成功！! !")
+        else:
+            print("破解失败。。。")
+    finally:
+        pass
 
->
->
->观察上述代码可知，我们构造了一个由数字和字符组成的字符串，然后通过该字符串生成固定长度为5的字符串。通过遍历固定长度为5的字符串，一定程度上简化了程序的复杂性，而不丧失其正确性。我们通过建立哈希表来存储已经进行计算过的字符串，并通过not in 来检查是否发生了reduced 哈希碰撞。这样虽然使得时间复杂度由pow(2,n)降至pow(2,n/2),但是也将空间复杂度由常数变成了pow(2,n).由此来看，生日攻击属于一种空间换取时间的算法。
 
+>reusing k by different users
+>```python
+>    if __name__ == "__main__":
+    try:
+        ### SM2
+        cv     = Curve.get_curve('secp256k1')
+        pu_key = ECPublicKey(Point(0x65d5b8bf9ab1801c9f168d4815994ad35f1dcb6ae6c7a1a303966b677b813b00,
+                                   
+                                   0xe6b865e529b8ecbf71cf966e900477d49ced5846d7662dd2dd11ccd55c0aff7f,
+                                   cv))
+        pv_key = ECPrivateKey(0xfb26a4e75eec75544c0f44e937dcf5ee6355c7176600b9688c667e5c283b43c5,
+                              cv)
+        pv_key1 = ECPrivateKey(0xfb26a4e75eec75544c0f44e937dce5ee6355c7176600b9688c667e5c283b43c5,
+                              cv)
+        pu_key1=pv_key1.get_public_key
+        print("椭圆曲线是：",cv)
+        signer=SM2()
+        ##用户A
+        ID = b"TangShi"
+        entlen = len(ID) * 8
+        ENTL = entlen.to_bytes(2, 'big')
+        Z = hashlib.sha256(ENTL + ID + bin(cv.a)[2:].encode() + bin(cv.b)[2:].encode()
+        + bin(cv.generator.x)[2:].encode()+ bin(cv.generator.y)[2:].encode() +
+        bin((pv_key.d * cv.generator).x)[2:].encode() + bin((pv_key.d * cv.generator).y)[2:].encode()).digest()
+        ##用户B
+        ID1 = b"TS"
+        entlen1 = len(ID1) * 8
+        ENTL1 = entlen.to_bytes(2, 'big')
+        Z1 = hashlib.sha256(ENTL + ID1 + bin(cv.a)[2:].encode() + bin(cv.b)[2:].encode() + bin(cv.generator.x)[2:].encode() + bin(cv.generator.y)[2:].encode() + bin((pv_key.d * cv.generator).x)[2:].encode() + bin((pv_key.d * cv.generator).y)[2:].encode()).digest()
+        message=b"Hello ts"
+        print("消息是：",message)
+        sig1=signer.sign(message,Z1,pv_key)
+        r1,s1 = decode_sig(sig1, "BTUPLE")
+        print("签名是： ",sig1)
+        
+        message1=b"Hello world"
+        print("消息是：",message1)
+        sig2=signer.sign(message1,Z1,pv_key1)
+        r2,s2 = decode_sig(sig2, "BTUPLE")
+        print("签名是： ",sig2)
+
+        MY_db=((3-s2)*pow(s2+r2,-1,cv.order))%cv.order
+        MY_da=((3-s1)*pow(s1+r1,-1,cv.order))%cv.order
+        print(pv_key.d)
+        print(MY_da)
+        if(pv_key.d==MY_da):
+            print("用户A的d破解成功!!!")
+        else:
+             print("用户A的d破解失败。。。")
+        print(pv_key1.d)
+        print(MY_db)
+        if(pv_key1.d==MY_db):
+            print("用户B的d破解成功!!!")
+        else:
+             print("用户B的d破解失败。。。")
+    finally:
+        pass
+
+> same d and k with ECDSA
+> ```python
+>    if __name__ == "__main__":
+    try:
+        ### SM2
+        cv     = Curve.get_curve('secp256k1')
+        pu_key = ECPublicKey(Point(0x65d5b8bf9ab1801c9f168d4815994ad35f1dcb6ae6c7a1a303966b677b813b00,
+                                   
+                                   0xe6b865e529b8ecbf71cf966e900477d49ced5846d7662dd2dd11ccd55c0aff7f,
+                                   cv))
+        pv_key = ECPrivateKey(0xfb26a4e75eec75544c0f44e937dcf5ee6355c7176600b9688c667e5c283b43c5,
+                              cv)
+        print("椭圆曲线是：",cv)
+        signer2=SM2()
+        ##用户A
+        ID = b"TangShi"
+        entlen = len(ID) * 8
+        ENTL = entlen.to_bytes(2, 'big')
+        Z = hashlib.sha256(ENTL + ID + bin(cv.a)[2:].encode() + bin(cv.b)[2:].encode()
+        + bin(cv.generator.x)[2:].encode()+ bin(cv.generator.y)[2:].encode() +
+        bin((pv_key.d * cv.generator).x)[2:].encode() + bin((pv_key.d * cv.generator).y)[2:].encode()).digest()
+
+        message2=b"Hello ts"
+        print("消息是：",message2)
+        sig2=signer2.sign(message2,Z,pv_key)
+        r2,s2 = decode_sig(sig2, "BTUPLE")
+        print("签名是： ",sig2)
+        
+        message1=b"Hello world"
+        print("消息是：",message1)
+
+        signer1=ECDSA("BTUPLE")
+        sig1=signer1.sign_k(message1,pv_key,3)
+        r1,s1 = decode_sig(sig1, "BTUPLE")
+        e= int.from_bytes(message1, 'big')
+        MY_d=((s1*s2-e)*pow(r1-s1*s2-s1*r2,-1,cv.order))%cv.order
+        print("d是： ",pv_key.d)
+        print("破解的d是： ",MY_d)
+        if(pv_key.d==MY_d):
+            print("破解成功！! !")
+        else:
+            print("破解失败。。。")
+        
+    finally:
+        pass
 
 >## 结果展示
 >8bits
