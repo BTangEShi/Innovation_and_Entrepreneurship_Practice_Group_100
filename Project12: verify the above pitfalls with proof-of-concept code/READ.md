@@ -215,58 +215,28 @@
         pass
 
 >## 结果展示
->8bits
+>leaking K
 >
 >
->![8bits](8bits.png)
+>![](5.png)
 >
 >
->16bits
+>reusing k
 >
 >
->![16bits](16bits.png)
+>![](6.png)
 >
 >
->24bits
+> reusing k by different users
 >
 >
->![24bits](24bits.png)
+>![](7.png)
 >
 >
->32bits
+>same d and k with ECDSA
 >
 >
->![32bits](32bits.png)
->
->
->40bits
->
->
->![40bits](40bits.png)
->
->
->![40bits](40bit.png)
->
->
->44bits
->
->
->![44bits](44bits.png)
->
->
->![44bits](44bit.png)
->
->
->48bits
->
->
->![48bits](48bits.png)
->
->
->52bits
->
->
->![52bits](52bits.png)
+>![](8.png)
 >
 >
 
