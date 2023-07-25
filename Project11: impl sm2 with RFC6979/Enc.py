@@ -56,11 +56,7 @@ class SM2:
         y2=S.y
         y2_bit=bin(y2)[2:]
         t=self.KDF(x2_bit+y2_bit,len(msg))
-        print("x2_bit+y2_bit",x2_bit+y2_bit)
-        print("length: ",len(msg))
-        print("t: ",t)
         C2=int(msg,2)^int(t,2)
-        print("C2: ",C2)
         C2_bit=bin(C2)[2:]
         C3=hashlib.sha256((x2_bit+msg+y2_bit).encode()).digest()
         C3_bit= ''.join(format(byte, '08b') for byte in C3)
@@ -88,12 +84,8 @@ class SM2:
         x2_bit=bin(x2)[2:]
         y2_bit=bin(y2)[2:]
         t=self.KDF(x2_bit+y2_bit,cipher[-1])
-        print("x2_bit+y2_bit",x2_bit+y2_bit)
-        print("length: ",cipher[-1])
-        print("t: ",t)
         ##取出比特串C2
         C2_bit=cipher[0][(cipher[1]+cipher[3]):]
-        print("C2: ",int(C2_bit,2))
         ##计算明文
         M=int(t,2)^int(C2_bit,2)
         M_bit=bin(M)
@@ -170,4 +162,3 @@ if __name__ == "__main__":
         print("恢复后的明文是： ",overcome)     
     finally:
         pass
-
