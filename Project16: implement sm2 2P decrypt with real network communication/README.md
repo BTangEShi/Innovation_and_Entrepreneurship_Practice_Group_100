@@ -5,7 +5,7 @@
 > 恢复明文：解密者 通过异或操作，得到对应的明文M。  
 > 具体实现原理如图所示：
 > 
->![enter image description here](8.png)
+>![enter image description here](5.png)
 >
 > 
 > ## 代码说明
