@@ -13,7 +13,9 @@
 > PGP（Pretty Good Privacy，中文翻译“优良保密协议”）是一个基于RSA体系、将公开密钥加密与传统密钥加密相结合的用于信息加密、验证的商业应用程序，由菲尔·齐默尔曼 (Philip R. Zimmermann) 于1991年开发完成并发布。自发布以来，PGP凭借其可以运行于多种操作系统平台、其加密算法得到普遍认可、具有广泛的应用场景等特性使得PGP的应用领域迅速扩大，同时使PGP自身也得到了更好的发展。
 > PGP技术具体实现原理如下：
 >
-> ![enter image description here](1.png)
+> ![enter image description here](3.png)
+>
+> 
 > ## 代码说明
 > 我们通过构建CS模式来实现真实网络通信中的SM2密钥协商，代码细节实现如下：
 > 
