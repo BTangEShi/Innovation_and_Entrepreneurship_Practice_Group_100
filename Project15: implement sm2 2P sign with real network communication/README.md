@@ -1,69 +1,62 @@
-﻿
-
-
 > ## 原理阐释
+> SM2两方签名是指在一个签名过程中，涉及两个签名者对同一份消息进行签名。两方签名的原理主要涉及使用SM2椭圆曲线算法进行签名的过程，并可以通过以下步骤来实现：  
+>生成密钥对：首先，每个签名者都生成自己的SM2密钥对，包括私钥和公钥。  
+>消息摘要：接下来，对待签名的消息进行哈希计算，通常使用SHA-256等哈希算法，得到消息的摘要。  
+>生成签名：每个签名者使用自己的私钥和消息摘要，通过SM2椭圆曲线算法计算出相应的签名值。  
+>合并签名：两个签名者将各自的签名值进行合并，得到最终的两方签名结果。  
+>
+> 具体实现原理如图所示：
 > 
-> 生日问题也叫做生日悖论，它是这样这样描述的。假如随机选择n个人，那么这个n个人中有两个人的生日相同的概率是多少。如果要想概率是100%，那么只需要选择367个人就够了。因为只有366个生日日期（包括2月29日）。如果想要概率达到99.9% ，那么只需要70个人就够了。50%的概率只需要23个人。更直观地，我们可以看一下两幅图片。
->![enter image description here](1.webp.jpg)
->![enter image description here](2.webp.jpg)
+>![enter image description here](8.png)
 >
 > 
-> 而在密码学中，我们可以利用生日悖论，构造哈希碰撞。使得哈希碰撞的复杂度由pow(2,n)变成pow（2，n/2），这使得寻找哈希碰撞成为可能。
 > ## 代码说明
-> 我们已经使用c++代码完成了SM3的实现。但是，考虑到攻击的方便性，我们本次实验使用python的gmssl库完成SM3的生日碰撞攻击的实现。并且，通过引入python的hashlib库完成sha256的生日碰撞攻击地实现来进行相应的对照。具体代码细节实现如下：
+> 我们通过构建CS模式来实现真实网络通信中的SM2两方签名，签名（不包括网络通信）代码细节实现如下：
 > 
 >    ```python
->     def collision_SHA256(num):
-        for item in permutations(ts,5):
-            item=''.join(item)
-            item=item.encode()
-            hash_object = hashlib.sha256(item)
-            hex_digest = hash_object.hexdigest()
-            value=hex_digest[0:num]
-            if(value not in st):
-                st[value]=(item,1)
-            else:
-                print(st[value][0])
-                print(item)
-                print(SHA256(st[value][0].decode()))
-                print(SHA256(item.decode()))
-                break
+>     d1=ecrand.rnd(n-1)
+        d1_inv=pow(d1,-1,n)
+        P1=d1_inv*G
+        d2=ecrand.rnd(n-1)
+        d2_inv=pow(d2,-1,n)
+        P=d2_inv*P1-G
+        #print("Public key: ",P)
+        M="hello"
+        Z="AB"
+        M_=Z+M
+        e= hashlib.sha256(M_.encode()).hexdigest()
+        k1=ecrand.rnd(n-1)
+        Q1=k1*G
+        e_int=int.from_bytes(e.encode())
+        k2=ecrand.rnd(n-1)
+        Q2=k2*G
+        k3=ecrand.rnd(n-1)
+        Q4=k3*Q1+Q2
+        x1=Q4.x
+        y1=Q4.y
+        r=(x1+e_int)%n
+        s2=(d2*k3)%n
+        s3=(d2*(r+k2))%n
+        s=((d1*k1)*s2+d1*s3-r)%n
 > 
->```python
->    def collision_SHA256(num):
-        for item in permutations(ts,5):
-            item=''.join(item)
-            item=item.encode()
-            hash_object = hashlib.sha256(item)
-            hex_digest = hash_object.hexdigest()
-            value=hex_digest[0:num]
-            if(value not in st):
-                st[value]=(item,1)
-            else:
-                print(st[value][0])
-                print(item)
-                print(value)
-                break
-
 >
->
->观察上述代码可知，我们构造了一个由数字和字符组成的字符串，然后通过该字符串生成固定长度为5的字符串。通过遍历固定长度为5的字符串，一定程度上简化了程序的复杂性，而不丧失其正确性。我们通过建立哈希表来存储已经进行计算过的字符串，并通过not in 来检查是否发生了reduced 哈希碰撞。这样虽然使得时间复杂度由pow(2,n)降至pow(2,n/2),但是也将空间复杂度由常数变成了pow(2,n).由此来看，生日攻击属于一种空间换取时间的算法。
-
+>观察上述代码可知，我们生成sub private key d1和d2，计算shared public key P。之后通过生成随机数k1、k2、k3,来得到SM2对应的k=k1*k3+k2.最终，完成对信息的签名。
 
 >## 结果展示
->8bits
+>网络通信结果展示：
+>
+>服务器端（用户B）
+>
+>![](2.png)
 >
 >
->![8bits](8bits.png)
+>客户端（用户A）
 >
 >
->16bits
+>![](1.png)
 >
 >
->![16bits](16bits.png)
->
->
->24bits
+>速度展示
 >
 >
 >![24bits](24bits.png)
