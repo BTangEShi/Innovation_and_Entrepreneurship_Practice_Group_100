@@ -11,12 +11,13 @@ I = In
 A = Alphanumeric  
 ### 为什么需要MPT？  
 There are typically two different types of data:
-Permanent
+#### Permanent  
 Once a transaction occurs, that record is sealed forever.
 This means that once you locate a transaction in a block’s transaction trie, you can return to the same path over and over to retrieve the same result
-Ephemeral
+#### Ephemeral  
 In the case of Ethereum, account states change all the time! (ie. A user receives some ether, interacts with a contract, etc)
 nonce, balance, storageRoot, codeHash
+
 It makes sense that permanent data, like mined transactions, and ephemeral data, like Ethereum accounts (balance, nonce, etc), should be stored separately. Merkle trees, again, are perfect for permanent data. PMTs are perfect for ephemeral data, which Ethereum is in plenty supply of.
 Unlike transaction history, Ethereum account state needs to be frequently updated. The balance and nonce of accounts is often changed, and what’s more, new accounts are frequently inserted, and keys in storage are frequently inserted and deleted.
 # MPT的前世
@@ -26,13 +27,13 @@ Trie树，又称前缀树或字典树，是一种有序树，用于保存关联�
 ### radix trie 优势
 相比于哈希表，使用前缀树来进行查询拥有共同前缀key的数据时十分高效，例如在字典中查找前缀为pre的单词，对于哈希表来说，需要遍历整个表，时间效率为O(n)，然而对于前缀树来说，只需要在树中找到前缀为pre的节点，且遍历以这个节点为根节点的子树即可。  
 
-![](0.png)
+![](11.png)
 
 ##  Patricia trie
 ### 什么是patricia trie?
 一种更节省空间的Trie。对于基数树的每个节点，如果该节点是唯一的儿子的话，就和父节点合并。
 
-![](0.png)
+![](12.png)
 
 ## Merkle tree
 ### 什么是merkle tree?
@@ -43,9 +44,9 @@ Merkle tree的特点之一就是当树节点内容发生变化时，能够在前
 #### 轻节点扩展
 采用Merkle tree，可以在公链环境下扩展一种“轻节点”。轻节点的特点是对于每个区块，仅仅需要存储约80个字节大小的区块头数据，而不存储交易列表，回执列表等数据。
 
-![](0.png)
+![](13.png)
 
-# MPT的工作原理原理
+# MPT的工作原理
 ## 基本键值映射
 >type Trie interface {  
 >  // methods as a basic key-value mapping  
