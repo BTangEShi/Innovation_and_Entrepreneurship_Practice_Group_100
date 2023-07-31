@@ -54,11 +54,11 @@ HashWires的灵感来自PayWord协议，PayWord协议是由Rivest和Shamir在199
 
 服务器端（用户A）
 
-![](A.png)
+![](Alice.png)
 
 客户端（用户B）
 
-![](B.png)
+![](Bob.png)
 
 
 
