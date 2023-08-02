@@ -8,7 +8,6 @@ You also compute r−1, which is the multiplicative inverse of the value r from 
 Then, you compute z which is the lowest n bits of the hash of the message (where n is the bit size of the curve).  
 Then, the two public keys are r−1(sR−zG)and r−1(sR′−zG).  
 It is easy to verify that if you plug either of these values in the ECDSA signature routines as the public keys, the signature validates.  
-图示如下：
 ![](0.png)
 # 实例
 ## 具体的以太坊交易
