@@ -97,4 +97,26 @@
 }
 
 >## 交易信息分析
-> 
+> 通过阅读官方文档对交易数据结构的阐述，即可对刚才交易的rowdata进行解析：\
+>rowdata：01000000014da3740067554e29f65d63a304001e4212eec817ac3a4d3ae200756cc2a46aaa000000006b483045022100b8e15ee5337c2fccd3029d3975cdf1fa1cdbdafbe0f53579b06ddf915783f69802200b35402ffc949af81a10b87338cedd3c9ce01a34c456e6615a4aa80a508fec08012103a9151b48413854c1ba813f49a58eed7271ecb969682db0d43924a20e6b8b00d9ffffffff026e230a00000000001976a9142978e00ffb10802a21ce9bb4f5b9509e81d1e50788ac3b480600000000001976a914f6d3dbed5ab01374415e6e7317129f4452dded3e88ac00000000\
+>01000000 version，4字节\
+01 交易输入个数，1字节（变长）\
+>4da3740067554e29f65d63a304001e4212eec817ac3a4d3ae200756cc2a46aaa  UTXO(Unspent Transaction Output)，32字节\
+>00000000  UTXO的index，4字节\
+>6b  解锁脚本长度，1字节（变长）\
+>48  将48个字节的数据压入栈里\
+>3045022100b8e15ee5337c2fccd3029d3975cdf1fa1cdbdafbe0f53579b06ddf915783f69802200b35402ffc949af81a10b87338cedd3c9ce01a34c456e6615a4aa80a508fec08012103a9151b48413854c1ba813f49a58eed7271ecb969682db0d43924a20e6b8b00d9  解锁脚本，变长,长度记录在刚才的解锁脚本长度里。\
+>ffffffff 交易序列号，4字节\
+>02 交易输出个数，1字节（变长）\
+>6e230a0000000000 第一个输出的输出金额，8字节，转化成十进制数为664430，符合刚才查询的交易数额。\
+>19 第一个输出的锁定脚本长度，1字节（变长）\
+>76a9142978e00ffb10802a21ce9bb4f5b9509e81d1e50788ac 第一个输出的锁定脚本，变长\
+>3b48060000000000 第二个输出的输出金额，8字节，转化成十进制数为411707，符合刚才查询的交易数额。\
+>19 第二个输出的锁定脚本长度，1字节（变长）\
+>76a914f6d3dbed5ab01374415e6e7317129f4452dded3e88ac 第二个输出的锁定脚本，变长\
+00000000 Time Lock，4字节
+>
+>## 参考网站
+>https://www.cnblogs.com/itlgl/p/10419307.html \
+>https://dev.to/nownodes/how-to-make-a-bitcoin-transaction-with-python-54k4 \
+>https://www.exchen.net/testnet-send-bitcoin.html \
