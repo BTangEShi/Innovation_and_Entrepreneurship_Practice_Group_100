@@ -22,7 +22,7 @@
 ### 实现结果
 >|        | 4bits  | 8bits | 12bits | 16bits | 18bits |24bits|
 >|--------|--------|--------|--------|-------|--------|------|
->| SHA256 | 0.010s | 0.012s | 0.012s | 0.066s| 0.065   |13.146|
+>| SHA256 | 0.010s | 0.012s | 0.012s | 0.066s| 0.065s   |13.146|
 >| SM3    | 0.009s | 0.535s | 4.510s | 176.596s | |
 >
 ## Project3: implement length extension attack for SM3, SHA256, etc.
@@ -174,7 +174,7 @@
 ### 实现思路
 构建等式：sum(s)*G=sum(R)+sum(e*P)
 ### 实现结果
-![](summary_photos/cahrt.png)
+![](summary_photos/chart.png)
 ## Project22: research report on MPT
 ### MPT的前世今生
 前世，即了解MPT基于的数据结构。比如：树、前缀树、merkle tree等数据结构，掌握各自的实现与优缺点。    
