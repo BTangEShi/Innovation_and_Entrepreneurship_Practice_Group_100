@@ -150,6 +150,9 @@
 
 由此可以看出，SM2单方解密比2P模式快六倍左右。  
 ## Project17：比较Firefox和谷歌的记住密码插件的实现区别
+一方面，Firefox提供主密码来增强安全性；  
+另一方面，google会检查网站上输入的登录凭据（用户名或电子邮件地址和密码），并查看它们是否与他们知道之前公开的详细信息相匹配，该功能对于隐私的保护十分重要。具体算法
+参见老师PPT的内容。
 ## Project18: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself
 ## Project19: forge a signature to pretend that you are Satoshi
 ## Project20: ECMH PoC
