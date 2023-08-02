@@ -76,7 +76,11 @@
 ### 实现思路
 利用AES-Ni模块完成AES运算。  
 ### 实现结果
-
+>|        | 单次加密运行时间  | 
+>|--------|--------|
+>| AES-Ni | 4.21e-5s |
+>| OPENSSL| 0.001651s | 
+>
 ## Project9:AES / SM4 software implementation
 ### 主要贡献
 学习并掌握AES算法。  
