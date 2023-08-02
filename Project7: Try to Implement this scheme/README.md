@@ -1,5 +1,5 @@
-> ## 原理阐述
-> ### Generalizing Hashchains
+> # 原理阐述
+> ## Generalizing Hashchains
 > 在这一步中我们将project6中的方案以某种方式拆分单个链。即原来对某一个数字（记作承诺数）的验证只有一个链，现在转化为该数字的每一位都有一个hash链。
 >
 > ![enter image description here](1.png)
@@ -9,7 +9,7 @@
 >
 > ![enter image description here](2.png)
 >
-> ### Minimum Dominating Partitions
+> ## Minimum Dominating Partitions
 > 针对上面的情况，我们需要对承诺数生成多个hash多链。即对一个承诺数，我们生成一个列表，列表内容为它本身以及比其小的中最大的且后面i位均为9的递减数列（i取遍1到承诺数的位数，若有重复，只算其中一个）。\
 > 举例如下:
 >
