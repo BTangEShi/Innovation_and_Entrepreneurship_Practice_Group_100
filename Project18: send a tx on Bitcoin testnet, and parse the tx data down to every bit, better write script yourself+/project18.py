@@ -6,4 +6,4 @@ print(my_key.to_wif())
 print(my_key.address)
 #print(my_key.balance_as('usd'))
 
-print(my_key.create_transaction([('mjJEoUh5T8GjqcGndrXWFAWQahpHoMq8s1', 0.0000001, 'usd')]))
+print(my_key.create_transaction([('mjJEoUh5T8GjqcGndrXWFAWQahpHoMq8s1', 190, 'usd')]))
