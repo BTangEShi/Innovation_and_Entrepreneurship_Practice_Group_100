@@ -54,7 +54,7 @@
 采用生成随机字符串的方式完成10w叶子结点的构建。  
 生成和验证来完成proof。  
 ### 实现结果
-![](summary_photos/Merkle_Tree.png)
+![](summary_photos/MT.png)
 ## Project6:impl this protocol with actual network communication
 ### 主要贡献
 理解了range proofs from hash function的原理。  
@@ -174,7 +174,7 @@
 ### 实现思路
 构建等式：sum(s)*G=sum(R)+sum(e*P)
 ### 实现结果
-![](summary_photos/Schnorr.png)
+![](summary_photos/cahrt.png)
 ## Project22: research report on MPT
 ### MPT的前世今生
 前世，即了解MPT基于的数据结构。比如：树、前缀树、merkle tree等数据结构，掌握各自的实现与优缺点。    
