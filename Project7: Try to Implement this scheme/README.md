@@ -30,3 +30,23 @@
 > ## The Final HashWires Protocol
 >
 > ![enter image description here](6.png)
+>
+> # 代码实现中的细节
+> ## 1、填充稀疏默克尔树的填充规则
+> 为了让每一个输入的叶信息可以尽可能多的影响根节点，我设计了一种特殊的填充方式。\
+> 首先，在默克尔树的类中设计一个计数器，记录当前输入叶节点的数量num。之后，当有新的叶节点要加入时，我们只需要把num的二进制数从从左往右变为从右往左（比如说原来是0011，就变为1100），把新的叶节点加入到变化后的num指向的叶节点即可。
+> ```C++
+> unsigned int Jishu(int number, int length) {
+    if (number <= 0) return number;
+    int hello = 0;
+    for (int middle = length / 2; middle > 0; middle = middle / 2) {
+        if ((number & 1) == 1) {
+            hello += middle;
+        }
+        number = number >> 1;
+    }
+    return hello;
+    }
+
+  >
+
