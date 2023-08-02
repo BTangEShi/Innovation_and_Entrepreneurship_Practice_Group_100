@@ -32,7 +32,7 @@
 ### 实现思路
 利用md结构的缺陷，建立相应的等式，实现长度扩展攻击。
 ### 实现结果
-![](1.png)
+![](summary_photos/SM3lengthexpandattack.png)
 ## Project4:do your best to optimize SM3 implementation (software)
 ### 主要贡献
 学习并应用一些编译器无法实现的优化。
@@ -54,7 +54,7 @@
 采用生成随机字符串的方式完成10w叶子结点的构建。
 生成和验证来完成proof。
 ### 实现结果
-![](1.png)
+![](summary_photos/MerkleTree.png)
 ## Project6:impl this protocol with actual network communication
 ### 主要贡献
 理解了range proofs from hash function的原理。
@@ -63,7 +63,11 @@
 构建客户端服务器模式实现网络通信。
 利用((hash)a)b=(hash)(a+b)的原理，完成range proofs.
 ### 实现结果
-![](1.png)
+
+![](summary_photos/6Alice.png) 
+
+![](summary_photos/6Bob.png)
+
 ## Project7:Try to Implement this scheme
 ## Project8:AES impl with ARM instruction
 ### 主要贡献
@@ -72,7 +76,7 @@
 ### 实现思路
 利用AES-Ni模块完成AES运算。
 ### 实现结果
-![](1.png)
+
 ## Project9:AES / SM4 software implementation
 ### 主要贡献
 学习并掌握AES算法。
@@ -81,7 +85,7 @@
 按照密钥异或、s盒替换、行混合和列混淆实现轮函数
 实现相应的密钥拓展。
 ### 实现结果
-![](1.png)
+![](summary_photos/AESovercome.png)
 ## Project10: report on the application of this deduce technique in Ethereum with ECDSA
 ## Project11: impl sm2 with RFC6979
 ### 主要贡献
@@ -91,7 +95,8 @@
 没有调用已经实现好的SM2模块，而是在引入椭圆曲线库的基础上自行实现国密算法SM2.
 接口设计合理，可以实现固定和随机两种参数生成方式。
 ### 实现结果
-![](1.png)
+![](summary_photos/11Encode.png)
+![](summary_photos/11sign.png)
 ## Project12: verify the above pitfalls with proof-of-concept code
 ### 主要贡献
 理解签名算法常见的pitfalls。
@@ -99,7 +104,8 @@
 ### 实现思路
 构建上述pitfall的场景，设计proof-of-concept code。
 ### 实现结果
-![](1.png)
+![](summary_photos/121.png)
+![](summary_photos/122.png)
 ## Project13: Implement the above ECMH scheme
 该协议在project20处实现。
 ## Project14: Implement a PGP scheme with SM2
@@ -110,7 +116,7 @@
 由于ppt上会话密钥是随机生成，故我们的PGP协议采用了这种方式，没有使用SM2密钥交换协议。
 但是，我们仍然完成了SM2密钥交换协议的实现
 ### 实现结果
-![](1.png)
+![](summary_photos/14.png)
 ## Project15: implement sm2 2P sign with real network communication
 ### 主要贡献
 理解两方签名的原理和优势。
@@ -123,6 +129,7 @@
 |--------|--------|-----------|----------|---------|
 | SM2单方|   1     | 1        | 无      | 0.003s  |
 | SM2两方 | 3       | 3        | 有      | 0.013s  |
+
 由此可以看出，SM2单方签名比2P模式快四倍左右。
 ## Project16: implement sm2 2P decrypt with real network communication
 ### 主要贡献
@@ -136,6 +143,7 @@
 |--------|--------|-----------|----------|----|-----|
 | SM2单方|   0     | 1        | 无      | 1    |0.0019s|
 | SM2两方 | 2       | 5        | 有      | 1   |0.012s|
+
 由此可以看出，SM2单方解密比2P模式快六倍左右。
 ## Project17：比较Firefox和谷歌的记住密码插件的实现区别
 ## Project18: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself
@@ -144,5 +152,5 @@
 ## Project21: Schnorr Bacth
 ## Project22: research report on MPT
 ### MPT的前世今生
-前世，即了解MPT基于的数据结构。比如：树、前缀树、merkle tree等数据结构。掌握各自的实现与优缺点。
+前世，即了解MPT基于的数据结构。比如：树、前缀树、merkle tree等数据结构。掌握各自的实现与优缺点。  
 今生，即了解MPT的结构，构造方式，应用场景，并给出一个具体实例进一步掌握MPT.
