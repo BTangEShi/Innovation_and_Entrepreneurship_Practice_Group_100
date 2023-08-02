@@ -12,7 +12,7 @@ In cryptography, the Elliptic Curve Digital Signature Algorithm (ECDSA) offers a
 ![enter image description here](B.png)
 
 #### 对应代码实现
-![enter image description here](s.png)
+![enter image description here](2.png)
 
 ### attack
 #### 实现流程
