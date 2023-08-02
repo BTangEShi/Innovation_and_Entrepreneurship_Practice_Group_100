@@ -91,6 +91,10 @@
 ### 实现结果
 ![](summary_photos/AESovercome.png)
 ## Project10: report on the application of this deduce technique in Ethereum with ECDSA
+### 主要贡献
+首先，掌握ECDSA算法。  
+然后，掌握通过签名推导公钥的方法。  
+最后，通过学习具体的以太坊交易，来完成恢复公钥的实际应用。  
 ## Project11: impl sm2 with RFC6979
 ### 主要贡献
 阅读SM2文档，掌握其常见的数据类型转换。  
@@ -150,13 +154,27 @@
 
 由此可以看出，SM2单方解密比2P模式快六倍左右。  
 ## Project17：比较Firefox和谷歌的记住密码插件的实现区别
+两者区别主要体现在以下两个方面：  
 一方面，Firefox提供主密码来增强安全性；  
 另一方面，google会检查网站上输入的登录凭据（用户名或电子邮件地址和密码），并查看它们是否与他们知道之前公开的详细信息相匹配，该功能对于隐私的保护十分重要。具体算法
 参见老师PPT的内容。
 ## Project18: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself
 ## Project19: forge a signature to pretend that you are Satoshi
+### 主要贡献
+掌握ECDSA签名与验证流程。
+### 实现思路
+通过伪造R，进一步得到参数e和s。
+实现的是(e,(r,s))的伪造，不能实现(m,(r,s))的伪造。
+### 实现结果
+![](summary_photos/Satosh.png)
 ## Project20: ECMH PoC
 ## Project21: Schnorr Bacth
+### 主要贡献
+掌握Schnorr签名与验证流程。
+### 实现思路
+构建等式：sum(s)*G=sum(R)+sum(e*P)
+### 实现结果
+![](summary_photos/Schnorr.png)
 ## Project22: research report on MPT
 ### MPT的前世今生
 前世，即了解MPT基于的数据结构。比如：树、前缀树、merkle tree等数据结构，掌握各自的实现与优缺点。    
