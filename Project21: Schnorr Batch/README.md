@@ -26,10 +26,10 @@ In cryptography, a Schnorr signature is a digital signature produced by the Schn
 
 ![enter image description here](2.png)
 
-![enter image description here](3.png)
+![enter image description here](chart.png)
 
 
-观察构造方式可知，该伪造是基于构造签名结果R，反过来确定参数e和s。实现的是(e,(r,s))的伪造，仍无法实现(m,(r,s))的伪造。
+
 
 
 
