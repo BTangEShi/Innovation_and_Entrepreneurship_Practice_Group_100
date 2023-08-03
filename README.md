@@ -199,6 +199,13 @@
 实现的是(e,(r,s))的伪造，不能实现(m,(r,s))的伪造。
 ### 实现结果
 ![](summary_photos/Satosh.png)
+## Project19: forge a signature to pretend that you are Satoshi 郭子旗
+### 主要贡献
+了解ECDSA签名的弱点，并根据现有签名仿造一个合法签名。
+### 实现思路
+通过随机选择参数u和v来伪造R，进一步的伪造与R配对的e和s。
+### 实现结果
+![](summary_photos/forge.png)
 ## Project20: ECMH PoC  郭子旗
 ### 主要贡献
 在py中自己实现了椭圆曲线加法、点乘等函数，并没有调用库函数。掌握了ECMH的基本流程。
