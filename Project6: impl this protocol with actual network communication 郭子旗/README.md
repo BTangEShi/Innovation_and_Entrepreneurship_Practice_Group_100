@@ -99,7 +99,7 @@ int main() {
 
     return 0;
 }
-
+```
 > ### bob
 > 对于bob来说，他需要接收alice发来的验证数字，生成验证信息发给alice，并最后从alice处接收结果即可。
 ```C++
@@ -214,5 +214,56 @@ int main() {
 
     return 0;
 }
+```
+> ### hash链的生成
+> 生成hash链，我们只需要用openssl库里的函数实现hash函数sm3，然后再创建一个函数用来循环进行n次sm3即可。
+> ```C++
+> #define BUFFER_SIZE 1024
 
-> ## 
+std::string sm3(const std::string& message) {
+    EVP_MD_CTX* mdctx;
+    const EVP_MD* md;
+    unsigned char md_value[EVP_MAX_MD_SIZE];
+    unsigned int md_len;
+
+    OpenSSL_add_all_digests();
+    md = EVP_get_digestbyname("sm3");
+
+    if (!md) {
+        std::cerr << "Error: SM3 not supported!" << std::endl;
+        return "";
+    }
+
+    mdctx = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(mdctx, md, nullptr);
+    EVP_DigestUpdate(mdctx, message.c_str(), message.length());
+    EVP_DigestFinal_ex(mdctx, md_value, &md_len);
+    EVP_MD_CTX_free(mdctx);
+
+    char result_hex[2 * EVP_MAX_MD_SIZE + 1];
+    for (unsigned int i = 0; i < md_len; i++) {
+        sprintf(&result_hex[i * 2], "%02x", (unsigned int)md_value[i]);
+    }
+
+    return std::string(result_hex);
+}
+
+
+std::string sm3_n_times(const std::string& message, int n) {
+    if (n <= 0) {
+        std::cerr << "Error: Invalid value of n. n should be greater than 0." << std::endl;
+        return "";
+    }
+
+    std::string hash_value = message;
+    for (int i = 0; i < n; i++) {
+        hash_value = sm3(hash_value);
+    }
+
+    return hash_value;
+}
+
+>## 实验结果
+>![enter image description here](a.png)
+>![enter image description here](b.png)
+
