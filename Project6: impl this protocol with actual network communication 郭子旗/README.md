@@ -267,3 +267,6 @@ std::string sm3_n_times(const std::string& message, int n) {
 >![enter image description here](a.png)
 >![enter image description here](b.png)
 
+## 时间证明
+>![enter image description here](a1.png)
+>![enter image description here](b1.png)
