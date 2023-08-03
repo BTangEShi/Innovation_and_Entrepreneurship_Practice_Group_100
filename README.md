@@ -63,13 +63,29 @@
 构建客户端服务器模式实现网络通信。  
 利用((hash)a)b=(hash)(a+b)的原理，完成range proofs.  
 ### 实现结果
-
 ![](summary_photos/6Alice.png) 
 
 ![](summary_photos/6Bob.png)
 
-## Project7:Try to Implement this scheme
-## Project8:AES impl with ARM instruction
+## Project6:impl this protocol with actual network communication 郭子旗
+### 主要贡献
+理解这个协议的基本内容，用cpp实现网络通信。
+### 实现思路
+利用cpp构建客户端服务器模式实现网络通信。  
+利用((hash)a)b=(hash)(a+b)的原理，完成range proofs.  
+### 实现结果
+![](summary_photos/6a.png) 
+
+![](summary_photos/6b.png)
+## Project7:Try to Implement this scheme  郭子旗
+### 主要贡献
+自己写了一个简易的 padded sparse tree，并运用了自己的在书中添加新元素的算法。\
+理解了hashwire的基本工作原理。
+### 实现思路
+用cpp实现padded sparse tree，并调用hashwire库里的内容，实现sm3作为hash函数。对于之后的实现，借鉴project6的内容即可。
+### 实验结果
+![](summary_photos/hashwires.png)
+## Project8:AES impl with ARM instruction 
 ### 主要贡献
 由于电脑是Intel型号，且另一队友实现了ARMi，故学习并应用了Intel instruction。  
 进一步理解SIMD指令以及其优化效果。  
@@ -90,6 +106,16 @@
 实现相应的密钥拓展。  
 ### 实现结果
 ![](summary_photos/AESovercome.png)
+## Project9: SM4 software implementation 郭子旗
+### 主要贡献
+利用Tbox，64位寄存器的利用和SIMD指令加速了SM4算法。
+### 实现思路
+得到Tbox中的T盒子，减少加密操作步骤。 每次加密两个区块，充分利用64位寄存器的优势。最后，我使用了SIMD指令集，同时对多个快操作，进一步实现加速。
+### 实现结果
+加密文件大小为703246字节。
+>|          | 原版 | Tbox| 64位寄存器   | SIMD |Openssl|  
+>|----------|--------|--------|--------|--------|--------|
+>| SM4      |0.05s | 0.031s |0.017s | 0.012s|0.11s|
 ## Project10: report on the application of this deduce technique in Ethereum with ECDSA
 ### 主要贡献
 首先，掌握ECDSA算法。  
@@ -159,6 +185,12 @@
 另一方面，google会检查网站上输入的登录凭据（用户名或电子邮件地址和密码），并查看它们是否与他们知道之前公开的详细信息相匹配，该功能对于隐私的保护十分重要。具体算法
 参见老师PPT的内容。
 ## Project18: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself
+### 主要贡献
+利用python中的bit库生成了交易的rawdata信息再广播出去的。对rawdata信息进行了详细分析。
+### 实现思路
+就是先创建一个地址并从水龙头处获取一些测试币，然后用py代码生成交易的rawdata信息，再用比特币浏览器广播出这笔交易。
+### 实现结果
+![](summary_photos/bitcoin.png)
 ## Project19: forge a signature to pretend that you are Satoshi
 ### 主要贡献
 掌握ECDSA签名与验证流程。
@@ -167,7 +199,13 @@
 实现的是(e,(r,s))的伪造，不能实现(m,(r,s))的伪造。
 ### 实现结果
 ![](summary_photos/Satosh.png)
-## Project20: ECMH PoC
+## Project20: ECMH PoC  郭子旗
+### 主要贡献
+在py中自己实现了椭圆曲线加法、点乘等函数，并没有调用库函数。掌握了ECMH的基本流程。
+### 实现思路
+通过将UTXO的hash值转化为椭圆曲线上的一点，来实现对UTXO列表的椭圆曲线撒谎给你的签名。
+### 实现结果
+![](summary_photos/ECMH.png)
 ## Project21: Schnorr Bacth
 ### 主要贡献
 掌握Schnorr签名与验证流程。
@@ -175,6 +213,13 @@
 构建等式：sum(s)*G=sum(R)+sum(e*P)
 ### 实现结果
 ![](summary_photos/chart.png)
+## Project21: Schnorr Bacth 郭子旗
+### 主要贡献
+掌握Schnorr签名与验证流程，理解Schnorr批量验证实现的原理。在py中自己实现了椭圆曲线加法、点乘等函数。
+### 实现思路
+在批量验证时，可以先将常数项s加起来，再做一起的椭圆曲线上的点乘运算。
+### 实现结果
+![](summary_photos/Batch.png)
 ## Project22: research report on MPT
 ### MPT的前世今生
 前世，即了解MPT基于的数据结构。比如：树、前缀树、merkle tree等数据结构，掌握各自的实现与优缺点。    
