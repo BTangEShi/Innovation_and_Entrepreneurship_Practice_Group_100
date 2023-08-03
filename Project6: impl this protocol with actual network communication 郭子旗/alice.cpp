@@ -39,7 +39,7 @@ int main() {
 
     std::cout << "Connected to B." << std::endl;
 
-    // ·¢ËÍÒªÇóÑéÖ¤µÄÊı×Ö
+    // å‘é€è¦æ±‚éªŒè¯çš„æ•°å­—
     std::string number = "123";
     int sentBytes = send(sockfd, number.c_str(), number.size(), 0);
     if (sentBytes == SOCKET_ERROR) {
@@ -49,7 +49,7 @@ int main() {
         return 1;
     }
 
-    // ´ÓB´¦½ÓÊÕÁ½¸öÊı×Ö£¬Ò»¸öÊÇhashµÄÖĞ¼ä½á¹û£¬Ò»¸öÊÇ×îÖÕ½á¹û
+    // ä»Bå¤„æ¥æ”¶ä¸¤ä¸ªæ•°å­—ï¼Œä¸€ä¸ªæ˜¯hashçš„ä¸­é—´ç»“æœï¼Œä¸€ä¸ªæ˜¯æœ€ç»ˆç»“æœ
     char buffer[BUFFER_SIZE];
     int receivedBytes1 = recv(sockfd, buffer, BUFFER_SIZE, 0);
     if (receivedBytes1 == SOCKET_ERROR) {
@@ -73,7 +73,7 @@ int main() {
 
     std::cout << "Received numbers from B: " << hexNumber1 << ", " << hexNumber2 << std::endl;
 
-    // ·¢ËÍÑéÖ¤½á¹ûÏûÏ¢¸øB
+    // å‘é€éªŒè¯ç»“æœæ¶ˆæ¯ç»™B
     std::string message = "Hello from A!";
     int sentBytes2 = send(sockfd, message.c_str(), message.size(), 0);
     if (sentBytes2 == SOCKET_ERROR) {
