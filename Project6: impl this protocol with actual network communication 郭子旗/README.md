@@ -5,10 +5,11 @@ alice想去网吧，但她不想给别人看她的证件，此时就需要一个
 ![enter image description here](1.png)
 
 ## 代码实现
-这个项目要求再在网络上实现这个协议，在这里，我们就用cpp来实现网络交互。代码如下：
+### alice
+这个项目要求再在网络上实现这个协议，在这里，我们就用cpp来实现网络交互。代码如下：\
 alice在代码里时验证方，这个代码简单来说就是先把要验证的数字发给bob，在从bob哪里接收验证的信息hash_a和hash_n，言震后把验证结果返回给bob即可。
 ```C++
-//alice
+
 int main() {
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -99,4 +100,119 @@ int main() {
     return 0;
 }
 
-> 
+> ### bob
+> 对于bob来说，他需要接收alice发来的验证数字，生成验证信息发给alice，并最后从alice处接收结果即可。
+```C++
+int main() {
+    //输入自己拥有的数字，生成一个签名
+    int Havenumber;
+    std::cin >> Havenumber;
+    std::string proof=init_two_string(Havenumber);
+
+    //开始网络连接
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        std::cerr << "Failed to initialize winsock." << std::endl;
+        return 1;
+    }
+
+    SOCKET listenSock = socket(AF_INET, SOCK_STREAM, 0);
+    if (listenSock == INVALID_SOCKET) {
+        std::cerr << "Socket creation failed." << std::endl;
+        WSACleanup();
+        return 1;
+    }
+
+    sockaddr_in servaddr;
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = INADDR_ANY;
+    servaddr.sin_port = htons(12345);
+
+    if (bind(listenSock, (const sockaddr*)&servaddr, sizeof(servaddr)) == SOCKET_ERROR) {
+        std::cerr << "Binding failed." << std::endl;
+        closesocket(listenSock);
+        WSACleanup();
+        return 1;
+    }
+
+    if (listen(listenSock, SOMAXCONN) == SOCKET_ERROR) {
+        std::cerr << "Listen failed." << std::endl;
+        closesocket(listenSock);
+        WSACleanup();
+        return 1;
+    }
+
+    std::cout << "Waiting for connection from A..." << std::endl;
+
+    SOCKET connSock = INVALID_SOCKET;
+    while (connSock == INVALID_SOCKET) {
+        connSock = accept(listenSock, nullptr, nullptr);
+        if (connSock == INVALID_SOCKET) {
+            std::cerr << "Accept failed. Retrying..." << std::endl;
+        }
+    }
+
+    std::cout << "Connection established with A." << std::endl;
+
+    // 从A接收要验证的数字
+    char buffer[BUFFER_SIZE];
+    int receivedBytes = recv(connSock, buffer, BUFFER_SIZE, 0);
+    if (receivedBytes == SOCKET_ERROR) {
+        std::cerr << "Receiving failed." << std::endl;
+        closesocket(connSock);
+        closesocket(listenSock);
+        WSACleanup();
+        return 1;
+    }
+    buffer[receivedBytes] = '\0';
+    std::string number(buffer);
+    int verifynumber = std::stoi(number);
+    std::cout << "Received number from A: " << number << std::endl;
+
+    //将两个数字发给A
+    std::string hexNumber1 = proof.substr(0, 32);
+    hexNumber1=sm3_n_times(hexNumber1, Havenumber - verifynumber);
+    std::string hexNumber2 = proof.substr(proof.length() - 64, 64);
+
+    int sentBytes1 = send(connSock, hexNumber1.c_str(), hexNumber1.size(), 0);
+    if (sentBytes1 == SOCKET_ERROR) {
+        std::cerr << "Sending failed." << std::endl;
+        closesocket(connSock);
+        closesocket(listenSock);
+        WSACleanup();
+        return 1;
+    }
+
+    int sentBytes2 = send(connSock, hexNumber2.c_str(), hexNumber2.size(), 0);
+    if (sentBytes2 == SOCKET_ERROR) {
+        std::cerr << "Sending failed." << std::endl;
+        closesocket(connSock);
+        closesocket(listenSock);
+        WSACleanup();
+        return 1;
+    }
+
+    std::cout << "Sent two numbers to A." << std::endl;
+
+    // 从A处接收是否成功的消息
+    int receivedBytes2 = recv(connSock, buffer, BUFFER_SIZE, 0);
+    if (receivedBytes2 == SOCKET_ERROR) {
+        std::cerr << "Receiving failed." << std::endl;
+        closesocket(connSock);
+        closesocket(listenSock);
+        WSACleanup();
+        return 1;
+    }
+    buffer[receivedBytes2] = '\0';
+    std::string message(buffer);
+
+    std::cout << "Received message from A: " << message << std::endl;
+
+    closesocket(connSock);
+    closesocket(listenSock);
+    WSACleanup();
+
+    return 0;
+}
+
+> ## 
