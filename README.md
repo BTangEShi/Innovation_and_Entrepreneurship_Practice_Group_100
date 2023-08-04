@@ -34,7 +34,7 @@
 ### 实现思路
 调用gmssl来实现SM3，在不断的随机生成一个字符串来寻找碰撞即可。
 ### 实现结果
- ![enter image description here](birth.png)
+![](summary_photos/birth.png)
 ## Project2: implement the Rho method of reduced SM3
 ### 主要贡献
 学习了Rho算法在整数分解中的应用。  
