@@ -180,16 +180,7 @@ public:
 > 证明某一结点在merkle树上只需安顺序对发来的从下到上执行hash（hash（a）+b），最后判断得到的hash值叶与根节点的hash是否相等即可。\
 > 代码实现：
 > ```C++
-> bool proof(std::vector<std::string> proofarray, std::string value) {
-    int sizeproof = proofarray.size();
-    std::string middle = value;
-    for (int i = 0; i < sizeproof - 1; i++) {
-        middle = sm3(addHexBigIntegers(middle, proofarray[i]));
-    }
-    if (middle == proofarray[sizeproof - 1]) return true;
-    else return false;
-}
-bool verify(std::vector < std::string> seed, std::vector < std::string> valuelist, int& number) {
+> bool verify(std::vector < std::string> seed, std::vector < std::string> valuelist, int& number) {
     std::string middle = "";
     int x = 10;
     for (int i = 0; i < seed.size(); i++) {
@@ -200,7 +191,18 @@ bool verify(std::vector < std::string> seed, std::vector < std::string> valuelis
     }
     //std::cout << "proof"  << " Data: " << middle <<'\t'<<number<< std::endl;
     return  proof(valuelist, sm3(middle));
+   }
+> ```C++:
+> bool proof(std::vector<std::string> proofarray, std::string value) {
+    int sizeproof = proofarray.size();
+    std::string middle = value;
+    for (int i = 0; i < sizeproof - 1; i++) {
+        middle = sm3(addHexBigIntegers(middle, proofarray[i]));
+    }
+    if (middle == proofarray[sizeproof - 1]) return true;
+    else return false;
 }
+> 
 
 # 结果展示
 
