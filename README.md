@@ -28,7 +28,7 @@
 >| SM3    | 0.036s | 0.154s | 1.307s | 11.736s|782.692s|1850.594s|       |       |
 >| SHA256 | 0.026s | 0.024s | 0.026s | 0.127s | 3.806s |3.877s |51.939s|1504.711s|
 >
->## Project1: implement the naïve birthday attack of reduced SM3 郭子旗
+## Project1: implement the naïve birthday attack of reduced SM3 郭子旗
 ### 主要贡献
 实现了SM3的生日碰撞攻击。  
 ### 实现思路
