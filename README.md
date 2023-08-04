@@ -28,6 +28,13 @@
 >| SM3    | 0.036s | 0.154s | 1.307s | 11.736s|782.692s|1850.594s|       |       |
 >| SHA256 | 0.026s | 0.024s | 0.026s | 0.127s | 3.806s |3.877s |51.939s|1504.711s|
 >
+>## Project1: implement the naïve birthday attack of reduced SM3 郭子旗
+### 主要贡献
+实现了SM3的生日碰撞攻击。  
+### 实现思路
+调用gmssl来实现SM3，在不断的随机生成一个字符串来寻找碰撞即可。
+### 实现结果
+ ![enter image description here](birth.png)
 ## Project2: implement the Rho method of reduced SM3
 ### 主要贡献
 学习了Rho算法在整数分解中的应用。  
