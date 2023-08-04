@@ -10,7 +10,7 @@
 >|       | 1 | 2|3 | 4 | 5 |6 |7 |8 | 9| 10|11 | 12 | 13 |14 |15 |16 | 17 | 18|19 |20|21|22 |总计|
 >|-------|---|--|--|---|---|--|--|--|--|---|---|----|----|---|---|---|----|---|---|--|--|---|----|
 >| 唐诗   | 1| 1| 1| 1  |1 |1 |0 | 1| 1| 1 | 1 |1   |1  |1  | 1 | 1 | 1  | 0  |1  |1 | 1| 1 | 20 |
->| 郭子旗 | 0| 0| 0| 0  |1 |1 |1 | 1| 1| 0 | 0 |0   |0  |0  | 0 | 1 | 1  | 1 |1  |1 | 1| 0 |  9  |
+>| 郭子旗 | 1| 0| 0| 0  |1 |1 |1 | 1| 1| 0 | 0 |0   |0  |0  | 0 | 0 | 1  | 1 |1  |1 | 1| 0 |  9  |
 两人完成全部实验内容，project完成数合计29个。  
 两人承诺各自完成自己的试验，相同实验并没交换思路，老师可放心阅读！
 >
@@ -71,6 +71,13 @@
 生成和验证来完成proof。  
 ### 实现结果
 ![](summary_photos/MT.png)
+## Project5: Impl Merkle Tree following RFC6962  郭子旗
+### 主要贡献
+利用完全二叉树实现merkle树，理解填充merkle树的填充规则。
+### 实现思路
+利用完全二叉树的框架实现基本的merkle树。
+### 实现结果
+![](summary_photos/6.png)
 ## Project6:impl this protocol with actual network communication
 ### 主要贡献
 理解了range proofs from hash function的原理。  
@@ -200,7 +207,7 @@
 一方面，Firefox提供主密码来增强安全性；  
 另一方面，google会检查网站上输入的登录凭据（用户名或电子邮件地址和密码），并查看它们是否与他们知道之前公开的详细信息相匹配，该功能对于隐私的保护十分重要。具体算法
 参见老师PPT的内容。
-## Project18: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself
+## Project18: send a tx on Bitcoin testnet, and parse the tx data down to every bit, better write script yourself 郭子旗
 ### 主要贡献
 利用python中的bit库生成了交易的rawdata信息再广播出去的。对rawdata信息进行了详细分析。
 ### 实现思路
@@ -234,7 +241,7 @@
 ### 主要贡献
 在py中自己实现了椭圆曲线加法、点乘等函数，并没有调用库函数。掌握了ECMH的基本流程。
 ### 实现思路
-通过将UTXO的hash值转化为椭圆曲线上的一点，来实现对UTXO列表的椭圆曲线撒谎给你的签名。
+通过将UTXO的hash值转化为椭圆曲线上的一点，来实现对UTXO列表的椭圆曲线上的签名。
 ### 实现结果
 ![](summary_photos/ECMH.png)
 ## Project21: Schnorr Bacth
