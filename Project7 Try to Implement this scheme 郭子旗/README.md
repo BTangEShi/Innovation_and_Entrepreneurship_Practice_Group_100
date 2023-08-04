@@ -48,5 +48,167 @@
     return hello;
     }
 
+> ## 2、merkle树中获得证明叶节点所需的节点列表
+> 这个函数就是返回该叶节点的每一个祖节点的兄弟节点的值即可
+> ``` C++
+> std::vector<std::string> getproof(std::string value) {
+        std::vector<std::string> stringsArray;
+        int numberhello = 0;
+        for (int i = 0; i < Paddednumber; i++) {
+            numberhello = Jishu(i, Nodenumber) + Nodenumber - 1;
+            if (nodes[numberhello].data == value) break;
+        }
+        for (int i = 0; i < depth - 1; i++) {
+            if ((numberhello & 1) == 1) {
+                stringsArray.push_back(nodes[numberhello + 1].data);
+            }
+            else {
+                stringsArray.push_back(nodes[numberhello - 1].data);
+            }
+            numberhello = (numberhello - 1) / 2;
+        }
+        stringsArray.push_back(nodes[0].data);
+        return stringsArray;
+    }
+
+> ## 3、MDP算法的实现
+> 我这里实现的MDP默认输入数字使用的进制为十进制，若采用其他进制，改遍该程序中一些数的值即可。\
+> MDP算法就我理解来说，就是按顺序给承诺数的每一位减去一个数，使得新得到的数的结尾为i个9，i为减去的承诺数的位数。\
+> 距离来说，256，就先对各位6减7得到249，在对十位减5得到199，即可得到最终答案。代码实现如下：
+> ```C++
+> std::vector<int> MDP(int number, int& weishu) {
+    int a = number;
+    int wei = 0;
+    while (a > 0) {
+        a = a / 10;
+        wei += 1;
+    }
+    weishu = wei;
+    std::vector<int> fanhui;
+    fanhui.push_back(number);
+    a = 10;
+    int b = number;
+    for (int i = 0; i < wei - 1; i++) {
+        int c = (b % a) / (a / 10);
+        if (c == 9)  continue;
+        else {
+            b = b - (c + 1) * a / 10;
+            fanhui.push_back(b);
+        }
+        a = a * 10;
+    }
+    return fanhui;
+}
+
+>## 4、承诺的实现
+>实现承诺我只需要先按输入的承诺数的位数n，生成n+1个种子，再将这n+1个种子中的后n个生成hash链，第一个种子hash后作为填充树的填充值来初始化树。之后，再更具MDP列表中的树，把相应的hash值加入到填充树中即可。代码如下：
+>```C++
+>class promise {
+private:
+    int Havenumber;
+    SMT tree;
+    std::vector<int> MDPlist;
+    std::vector<std::string> seedlist;
+    std::vector<std::string> prooflist;
+public:
+    promise(int number) {
+        int weishu = 0;
+        MDPlist = MDP(number, weishu);
+        seedlist = init_string(weishu + 1);
+        int MDPnumber = MDPlist.size();
+        int i = 0;
+        int y = 1;
+        while (y < MDPnumber) {
+            y *= 2;
+            i++;
+        }
+        tree.init(i, sm3(seedlist[0]));
+        std::string middle1;
+        for (int j = 0; j < MDPnumber; j++) {
+            int temp = MDPlist[j];
+            int beishu = 10;
+            std::string middle = "";
+            for (int x = 1; x < weishu + 1; x++) {
+                int c = (temp % beishu) / (beishu / 10);
+                middle += sm3_n_times(seedlist[x], c);
+                // std::cout << "sm3ntimes" << " Data: " << sm3_n_times(seedlist[x], c) << '\t' << c << '\t' << j << std::endl;
+                beishu = beishu * 10;
+            }
+            //std::cout <<"MIDDLE: " << middle << '\n';
+            tree.add(sm3(middle));
+            prooflist.push_back(middle);
+        }
+    };
+
+    //打印数据
+    void printshuju() {
+        std::cout << "Havenumber is " << Havenumber << '\n';
+        for (int i = 0; i < MDPlist.size(); i++) {
+            std::cout << "MDP " << i << " Data: " << MDPlist[i] << std::endl;
+        }
+        for (int i = 0; i < seedlist.size(); i++) {
+            std::cout << "seed " << i << " Data: " << seedlist[i] << std::endl;
+        }
+        tree.printnodes();
+    }
+
+    //在一个promise中获得证明一个数字所需的数据
+    bool getproof(std::vector<std::string>& seed, std::vector<std::string>& value, int verify, int& number) {
+        int j = 0;
+        if (verify > MDPlist[0])return 0;
+        if (MDPlist[MDPlist.size() - 1] > verify) {
+            j = MDPlist.size();
+        }
+        else {
+            while (MDPlist[j] > verify) {
+                j++;
+            }
+        }
+        number = MDPlist[j - 1];
+        for (int i = 0; i < seedlist.size() - 1; i++) {
+            seed.push_back(seedlist[i + 1]);
+        }
+        /* for (int i = 0; i < seedlist.size() - 1; i++) {
+            std::cout<< prooflist[j-1].substr(i*64,64)<<'\n';
+         }*/
+        value = tree.getproof(sm3(prooflist[j - 1]));
+        return 1;
+    }
+};
+> ## 4、验证承诺
+> 验证承诺只需要先按照原来的方式，把得到的种子列表按照发来的数字进行hash得到一个最后的字符串，再根据发来的merkle树节点证明列表，证明最后输出的字符串在该树上即可。\
+> 证明某一结点在merkle树上只需安顺序对发来的从下到上执行hash（hash（a）+b），最后判断得到的hash值叶与根节点的hash是否相等即可。\
+> 代码实现：
+> ```C++
+> bool proof(std::vector<std::string> proofarray, std::string value) {
+    int sizeproof = proofarray.size();
+    std::string middle = value;
+    for (int i = 0; i < sizeproof - 1; i++) {
+        middle = sm3(addHexBigIntegers(middle, proofarray[i]));
+    }
+    if (middle == proofarray[sizeproof - 1]) return true;
+    else return false;
+}
+bool verify(std::vector < std::string> seed, std::vector < std::string> valuelist, int& number) {
+    std::string middle = "";
+    int x = 10;
+    for (int i = 0; i < seed.size(); i++) {
+        int c = (number % x) / (x / 10);
+        middle += sm3_n_times(seed[i], c);
+        //std::cout << "ntimes" << " Data: " << sm3_n_times(seed[i], c) << '\t' << c << std::endl;
+        x = x * 10;
+    }
+    //std::cout << "proof"  << " Data: " << middle <<'\t'<<number<< std::endl;
+    return  proof(valuelist, sm3(middle));
+}
+
+# 结果展示
+
+>  ![enter image description here](7.png)
+>  ![enter image description here](8.png)
+
+# 文件时间
+>  ![enter image description here](ver.png)
+
   >
 
